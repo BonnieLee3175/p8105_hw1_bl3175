@@ -1,0 +1,54 @@
+---
+title: "p8105_hw1_bl3175"   
+output: github_document                  
+---
+
+```{r setup, include=FALSE}
+# Load required packages and set knitr chunk options
+library(tidyverse)
+library(moderndive)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+data("early_january_weather")
+glimpse(early_january_weather)
+```
+
+## Problem 1 
+
+**Dataset description (with inline R)**  
+This dataset has **`r nrow(early_january_weather)`** rows and **`r ncol(early_january_weather)`** columns.  
+Variable names include: `r paste(names(early_january_weather), collapse = ", ")`.  
+The mean temperature is **`r round(mean(early_january_weather$temp, na.rm = TRUE), 1)`** °F.  
+The `time_hour` variable is of class **`r class(early_january_weather$time_hour)[1]`** (hourly timestamps).  
+Humidity (`humid`) ranges from **`r round(min(early_january_weather$humid, na.rm = TRUE), 2)`** to **`r round(max(early_january_weather$humid, na.rm = TRUE), 2)`**.
+
+## Scatterplot of temp vs time_hour (colored by humidity)
+
+```{r fig.width=7, fig.height=4}
+# Build the scatterplot and store it in object `p`
+p <- ggplot(early_january_weather, aes(x = time_hour, y = temp, color = humid)) +
+  geom_point(alpha = 0.6) +
+  labs(
+    title = "Temperature vs Time (colored by humidity)",
+    x = "Time (hourly)",
+    y = "Temperature (°F)",
+    color = "Humidity"
+  ) +
+  theme_minimal()
+
+# Print the plot
+p
+```
+
+## Export the plot to the project directory
+
+```{r}
+# Create a folder to keep figures
+
+if (!dir.exists("figs")) dir.create("figs")
+
+# Save the plot 
+ggsave("figs/temp_vs_time.png", plot = p, width = 7, height = 4, dpi = 300)
+```
